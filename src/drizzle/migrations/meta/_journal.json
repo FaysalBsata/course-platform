@@ -8,6 +8,13 @@
       "when": 1738179991928,
       "tag": "0000_light_bloodstorm",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1738512654712,
+      "tag": "0001_fluffy_talisman",
+      "breakpoints": true
     }
   ]
 }
