@@ -1,7 +1,7 @@
-import { CourseSectionTable } from '@/drizzle/schema';
-import { revalidateCourseSectionCache } from './cache';
 import { db } from '@/drizzle/db';
+import { CourseSectionTable } from '@/drizzle/schema';
 import { eq } from 'drizzle-orm';
+import { revalidateCourseSectionCache } from './cache';
 
 export async function getNextCourseSectionOrder(courseId: string) {
   const section = await db.query.CourseSectionTable.findFirst({

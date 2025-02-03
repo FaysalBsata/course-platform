@@ -1,20 +1,20 @@
 'use server';
 
-import { z } from 'zod';
 import { getCurrentUser } from '@/services/clerk';
-import { sectionSchema } from '../schemas/sections';
+import { z } from 'zod';
+import {
+  deleteSection as deleteSectionDb,
+  getNextCourseSectionOrder,
+  insertSection,
+  updateSection as updateSectionDb,
+  updateSectionOrders as updateSectionOrdersDb,
+} from '../db/sections';
 import {
   canCreateCourseSections,
   canDeleteCourseSections,
   canUpdateCourseSections,
 } from '../permissions/sections';
-import {
-  getNextCourseSectionOrder,
-  insertSection,
-  updateSection as updateSectionDb,
-  deleteSection as deleteSectionDb,
-  updateSectionOrders as updateSectionOrdersDb,
-} from '../db/sections';
+import { sectionSchema } from '../schemas/sections';
 
 export async function createSection(
   courseId: string,

@@ -1,7 +1,6 @@
 'use client';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+import RequiredLabelIcon from '@/components/RequiredLabelIcon';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -10,13 +9,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import RequiredLabelIcon from '@/components/RequiredLabelIcon';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
-import { actionToast } from '@/hooks/use-toast';
-import { CourseSectionStatus, courseSectionStatuses } from '@/drizzle/schema';
-import { sectionSchema } from '../schemas/sections';
 import {
   Select,
   SelectContent,
@@ -24,8 +17,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { createSection } from '../actions/sections';
-import { updateSection } from '../db/sections';
+import { CourseSectionStatus, courseSectionStatuses } from '@/drizzle/schema';
+import { actionToast } from '@/hooks/use-toast';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { createSection, updateSection } from '../actions/sections';
+import { sectionSchema } from '../schemas/sections';
 export default function SectionForm({
   section,
   courseId,

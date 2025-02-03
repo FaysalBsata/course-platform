@@ -1,6 +1,6 @@
 import PageHeader from '@/components/PageHeader';
 import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DialogTrigger } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { db } from '@/drizzle/db';
@@ -8,6 +8,7 @@ import { CourseSectionTable, CourseTable, LessonTable } from '@/drizzle/schema';
 import CourseForm from '@/features/courses/components/CourseForm';
 import { getCourseIdTag } from '@/features/courses/db/cache/courses';
 import SectionFormDialog from '@/features/courseSections/components/SectionFormDialog';
+import SortableSectionList from '@/features/courseSections/components/SortableSectionList';
 import { getCourseSectionCourseTag } from '@/features/courseSections/db/cache';
 import { getLessonCourseTag } from '@/features/lessons/db/cache/lessons';
 import { asc, eq } from 'drizzle-orm';
@@ -45,6 +46,12 @@ export default async function EditCoursePage({
                 </DialogTrigger>
               </SectionFormDialog>
             </CardHeader>
+            <CardContent>
+              <SortableSectionList
+                courseId={course.id}
+                sections={course.courseSections}
+              />
+            </CardContent>
           </Card>
         </TabsContent>
         <TabsContent value="details">

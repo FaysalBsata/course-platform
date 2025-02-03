@@ -1,9 +1,9 @@
 'use client';
 import {
   Dialog,
+  DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogContent,
 } from '@/components/ui/dialog';
 import { CourseSectionStatus } from '@/drizzle/schema';
 
