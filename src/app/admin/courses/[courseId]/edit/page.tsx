@@ -10,9 +10,12 @@ import { getCourseIdTag } from '@/features/courses/db/cache/courses';
 import SectionFormDialog from '@/features/courseSections/components/SectionFormDialog';
 import SortableSectionList from '@/features/courseSections/components/SortableSectionList';
 import { getCourseSectionCourseTag } from '@/features/courseSections/db/cache';
+import LessonFormDialog from '@/features/lessons/components/LessonFormDialog';
+import SortableLessonList from '@/features/lessons/components/SortableLessonList';
 import { getLessonCourseTag } from '@/features/lessons/db/cache/lessons';
+import { cn } from '@/lib/utils';
 import { asc, eq } from 'drizzle-orm';
-import { PlusIcon } from 'lucide-react';
+import { EyeClosedIcon, PlusIcon } from 'lucide-react';
 import { cacheTag } from 'next/dist/server/use-cache/cache-tag';
 import { notFound } from 'next/navigation';
 
@@ -34,7 +37,7 @@ export default async function EditCoursePage({
           <TabsTrigger value="lessons">Lessons</TabsTrigger>
           <TabsTrigger value="details">Details</TabsTrigger>
         </TabsList>
-        <TabsContent value="lessons">
+        <TabsContent value="lessons" className="flex flex-col gap-2">
           <Card>
             <CardHeader className="flex items-center justify-between flex-row">
               <CardTitle>Sections</CardTitle>
@@ -53,6 +56,38 @@ export default async function EditCoursePage({
               />
             </CardContent>
           </Card>
+          <hr className="my-2" />
+          {course.courseSections.map((section) => (
+            <Card key={section.id}>
+              <CardHeader className="flex items-center gap-4 justify-between flex-row">
+                <CardTitle
+                  className={cn(
+                    'flex items-center gap-2',
+                    section.status === 'private' && 'text-muted-foreground'
+                  )}
+                >
+                  {section.status === 'private' && <EyeClosedIcon />}
+                  {section.name}
+                </CardTitle>
+                <LessonFormDialog
+                  defaultSectionId={section.id}
+                  sections={course.courseSections}
+                >
+                  <DialogTrigger asChild>
+                    <Button variant={'outline'}>
+                      <PlusIcon /> New Lesson
+                    </Button>
+                  </DialogTrigger>
+                </LessonFormDialog>
+              </CardHeader>
+              <CardContent>
+                <SortableLessonList
+                  lessons={section.lessons}
+                  sections={course.courseSections}
+                />
+              </CardContent>
+            </Card>
+          ))}
         </TabsContent>
         <TabsContent value="details">
           <Card>
