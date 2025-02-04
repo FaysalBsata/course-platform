@@ -2,15 +2,15 @@ import PageHeader from '@/components/PageHeader';
 import { Button } from '@/components/ui/button';
 import { db } from '@/drizzle/db';
 import {
-  CourseSectionTable,
-  CourseTable as DbCourseTable,
-  LessonTable,
-  UserCourseAccessTable,
+  CourseProductTable,
+  ProductTable as DbProductTable,
+  PurchaseTable,
 } from '@/drizzle/schema';
-import { getCourseGlobalTag } from '@/features/courses/db/cache/courses';
 import { getUserCourseAccessGlobalTag } from '@/features/courses/db/cache/userCourseAccess';
 import { getCourseSectionGlobalTag } from '@/features/courseSections/db/cache';
 import { getLessonGlobalTag } from '@/features/lessons/db/cache/lessons';
+import ProductTable from '@/features/products/components/ProductTable';
+import { getProductGlobalTag } from '@/features/products/db/cache';
 import { asc, countDistinct, eq } from 'drizzle-orm';
 import { cacheTag } from 'next/dist/server/use-cache/cache-tag';
 import Link from 'next/link';
@@ -30,7 +30,7 @@ export default async function ProductsPage() {
 async function getProducts() {
   'use cache';
   cacheTag(
-    getCourseGlobalTag(),
+    getProductGlobalTag(),
     getUserCourseAccessGlobalTag(),
     getCourseSectionGlobalTag(),
     getLessonGlobalTag()
@@ -38,22 +38,21 @@ async function getProducts() {
 
   return db
     .select({
-      id: DbCourseTable.id,
-      name: DbCourseTable.name,
-      sectionsCount: countDistinct(CourseSectionTable),
-      lessonsCount: countDistinct(LessonTable),
-      studentsCount: countDistinct(UserCourseAccessTable),
+      id: DbProductTable.id,
+      name: DbProductTable.name,
+      status: DbProductTable.status,
+      priceInDollars: DbProductTable.priceInDollars,
+      description: DbProductTable.description,
+      imageUrl: DbProductTable.imageUrl,
+      coursesCount: countDistinct(CourseProductTable.courseId),
+      customersCount: countDistinct(PurchaseTable.userId),
     })
-    .from(DbCourseTable)
+    .from(DbProductTable)
+    .leftJoin(PurchaseTable, eq(PurchaseTable.productId, DbProductTable.id))
     .leftJoin(
-      CourseSectionTable,
-      eq(CourseSectionTable.courseId, DbCourseTable.id)
+      CourseProductTable,
+      eq(CourseProductTable.productId, DbProductTable.id)
     )
-    .leftJoin(LessonTable, eq(LessonTable.sectionId, CourseSectionTable.id))
-    .leftJoin(
-      UserCourseAccessTable,
-      eq(UserCourseAccessTable.courseId, DbCourseTable.id)
-    )
-    .orderBy(asc(DbCourseTable.name))
-    .groupBy(DbCourseTable.id);
+    .orderBy(asc(DbProductTable.name))
+    .groupBy(DbProductTable.id);
 }
