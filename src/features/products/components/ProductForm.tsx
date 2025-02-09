@@ -37,11 +37,10 @@ export default function ProductForm({
     id: string;
     name: string;
     description: string;
+    priceInDollars: number;
     imageUrl: string;
     status: ProductStatus;
-    coursesCount: number;
-    customersCount: number;
-    priceInDollars: number;
+    courseIds: string[];
   };
   courses: { id: string; name: string }[];
 }) {
